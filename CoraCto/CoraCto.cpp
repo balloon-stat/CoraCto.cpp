@@ -58,12 +58,10 @@ public:
 class Field
 {
 public:
-	static const int WIDTH = 8;
-	static const int HEIGHT = 17;
+	static const int WIDTH = 6 + 1 + 1;
+	static const int HEIGHT = 13 + 3 + 1;
 	int score = 0;
 private:
-	static const int WH = 6;
-	static const int HT = 13;
 	Jewel field[HEIGHT][WIDTH];
 public:
 	void clear()
@@ -310,10 +308,8 @@ private:
 	{
 		if (!_kbhit()) return;
 
-		Key key = input();
-
 		if (chn->handle)
-		switch (key)
+		switch (input())
 		{
 		case Key::RIGHT:
 			chn->x = field->opMove(chn->y, chn->x, 1);
@@ -342,6 +338,7 @@ private:
 		win->writeGameOver();
 		win->print();
 		_getch();
+		field->score = 0;
 		field->clear();
 	}
 public:
@@ -393,7 +390,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	while (dr.work)
 	{
 		dr.proc();
-		//system("cls");
+
 		wake_up_time = std::chrono::system_clock::now() + std::chrono::milliseconds(time_span);
 		while (std::chrono::system_clock::now() < wake_up_time)
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
