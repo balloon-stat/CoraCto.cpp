@@ -3,7 +3,7 @@
 std::ostream& operator<<(std::ostream& out, Jewel jwl)
 {
 	const char* view[8] = { "¡", "›", "", "¢", "ž", "™", "¤", "@" };
-	return out << view[jwl];
+	return out << view[static_cast<std::underlying_type<Jewel>::type>(jwl)];
 }
 class Chunk
 {
@@ -39,6 +39,8 @@ public:
 		auto rnd = [&]{ return (*distribution)(*engine); };
 		for (int i = 0; i < SIZE; i++)
 			nextCn[i] = (Jewel)rnd();
+		if (nextCn[0] == nextCn[1] && nextCn[1] == nextCn[2])
+			gen();
 	}
 	void next()
 	{
@@ -133,7 +135,8 @@ public:
 	{
 		bool result = false;
 		const int dirs[4][2] = { { 1, 0 }, { 0, 1 }, { 1, 1 }, { 1, -1 } };
-
+		std::vector<std::pair<int, int>> vanished;
+		
 		for (int i = 0; i < 4; i++)
 		{
 			int dx = dirs[i][0];
@@ -150,9 +153,15 @@ public:
 					result = true;
 					score += 100 * n * n;
 					for (n--; n >= 0; n--)
-						field[y + dy * n][x + dx * n] = Jewel::NONE;
+						vanished.push_back(std::pair<int, int>(y + dy * n, x + dx * n));
 				}
 			}
+		}
+		auto j = vanished.begin();
+		while (j != vanished.end())
+		{
+			field[j->first][j->second] = Jewel::NONE;
+			j++;
 		}
 		return result;
 	}
@@ -357,7 +366,6 @@ public:
 	}
 	void proc()
 	{
-		count++;
 		operate();
 		if (count >= interval)
 		{
@@ -369,6 +377,7 @@ public:
 		}
 		win->write(field, chn);
 		win->print();
+		count++;
 	}
 	void dropped()
 	{

@@ -21,8 +21,8 @@
 #include <windows.h>
 
 
-enum Key { UP, DOWN, RIGHT, LEFT, ENTER, ESC, NOP };
-enum Jewel { WALL, RED, GREEN, PURPLE, BLUE, CYAN, YELLOW, NONE };
+enum class Key { UP, DOWN, RIGHT, LEFT, ENTER, ESC, NOP };
+enum class Jewel { WALL, RED, GREEN, PURPLE, BLUE, CYAN, YELLOW, NONE };
 
 
 // TODO: プログラムに必要な追加ヘッダーをここで参照してください。
